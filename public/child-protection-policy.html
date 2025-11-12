@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShuleGram - Children's Protection Policy</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #9b7fd6;
+            --secondary-color: #b794e8;
+            --accent-color: #7c5fb8;
+            --dark-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-light: #2c3e50;
+            --text-muted: #6c757d;
+        }
+
+        * {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(155, 127, 214, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-section {
+            padding: 100px 0 80px;
+            background: linear-gradient(135deg, rgba(155, 127, 214, 0.1) 0%, rgba(183, 148, 232, 0.15) 100%);
+            border-bottom: 1px solid rgba(155, 127, 214, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1577896851231-70ef18881754?w=1200&auto=format&fit=crop&q=80') center/cover;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .hero-section .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .policy-meta {
+            display: inline-flex;
+            gap: 20px;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            border: 1px solid rgba(155, 127, 214, 0.3);
+            box-shadow: 0 4px 12px rgba(155, 127, 214, 0.1);
+        }
+
+        .policy-meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 35px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(155, 127, 214, 0.15);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(155, 127, 214, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: url('https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&auto=format&fit=crop&q=80') center/cover;
+            opacity: 0.03;
+            border-radius: 50%;
+            transform: translate(50%, -50%);
+            pointer-events: none;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(155, 127, 214, 0.15);
+            border-color: var(--primary-color);
+        }
+
+        .section-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            color: var(--text-light);
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .principle-item {
+            background: rgba(155, 127, 214, 0.05);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .principle-item:hover {
+            background: rgba(155, 127, 214, 0.1);
+            transform: translateX(5px);
+        }
+
+        .principle-item strong {
+            color: var(--primary-color);
+        }
+
+        .measure-category {
+            background: rgba(155, 127, 214, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(155, 127, 214, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .measure-category::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 120px;
+            height: 120px;
+            background: url('https://images.unsplash.com/photo-1609220136736-443140cffec6?w=300&auto=format&fit=crop&q=80') center/cover;
+            opacity: 0.04;
+            border-radius: 50%;
+            transform: translate(30%, 30%);
+        }
+
+        .measure-category h5 {
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .feature-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, rgba(155, 127, 214, 0.15), rgba(183, 148, 232, 0.15));
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin: 5px;
+            border: 1px solid rgba(155, 127, 214, 0.3);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .prohibited-item {
+            background: rgba(239, 68, 68, 0.1);
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid #ef4444;
+        }
+
+        .contact-card {
+            background: linear-gradient(135deg, rgba(155, 127, 214, 0.1), rgba(183, 148, 232, 0.12));
+            border: 2px solid var(--primary-color);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .toc {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 25px;
+            position: sticky;
+            top: 80px;
+            border: 1px solid rgba(155, 127, 214, 0.2);
+            box-shadow: 0 2px 8px rgba(155, 127, 214, 0.08);
+        }
+
+        .toc-item {
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: block;
+            text-decoration: none;
+            color: var(--text-muted);
+        }
+
+        .toc-item:hover {
+            background: rgba(155, 127, 214, 0.1);
+            color: var(--text-light);
+            transform: translateX(5px);
+        }
+
+        .footer {
+            background: #ffffff;
+            padding: 40px 0;
+            margin-top: 60px;
+            border-top: 1px solid rgba(155, 127, 214, 0.2);
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1554344728-7758a47b8f42?w=1200&auto=format&fit=crop&q=80') center/cover;
+            opacity: 0.03;
+            z-index: 0;
+        }
+
+        .footer .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .toc {
+                position: static;
+                margin-bottom: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cpath fill='%239b7fd6' d='M150,120 Q150,80 190,80 L190,120 Q190,160 230,160 L230,200 Q230,240 190,240 L190,280 Q190,320 150,320 L150,280 Q150,240 110,240 L110,200 Q110,160 150,160 Z'/%3E%3Cpath fill='%23b794e8' d='M250,130 L290,130 Q330,130 330,170 L330,210 Q330,250 290,250 L250,250 Z'/%3E%3Cpath fill='%237c5fb8' d='M250,160 L290,160 L290,190 L250,190 Z'/%3E%3C/svg%3E" width="32" height="32" class="me-2" alt="ShuleGram Logo">
+                <span style="font-weight: 700; font-size: 1.5rem; color: #9b7fd6;">ShuleGram</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#for-you">For You</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#study-booster">Study Booster</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#testimonials">Testimonials</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#download">Download</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="legalDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Legal
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="legalDropdown">
+                            <li><a class="dropdown-item" href="/privacy-policy">Privacy Policy</a></li>
+                            <li><a class="dropdown-item active" href="/child-protection-policy">Child Protection Policy</a></li>
+                            <li><a class="dropdown-item" href="/terms-and-conditions">Terms & Conditions</a></li>
+                            <li><a class="dropdown-item" href="/data-protection">Data Protection</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="text-center">
+                <div class="hero-icon">
+                    <i class="fas fa-child fa-2x text-white"></i>
+                </div>
+                <h1 class="display-4 fw-bold mb-3">Children's Protection Policy</h1>
+                <p class="lead text-muted mb-4">Comprehensive safety measures for every child on our platform</p>
+                <div class="policy-meta">
+                    <span><i class="fas fa-file-alt"></i> Version 1.0</span>
+                    <span><i class="fas fa-calendar"></i> Effective: 11/11/2025</span>
+                    <span><i class="fas fa-mobile-alt"></i> ShuleGram App</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <div class="row">
+            <!-- Table of Contents -->
+            <div class="col-lg-3">
+                <div class="toc">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-list me-2"></i>Contents</h5>
+                    <a href="#section1" class="toc-item">1. Our Commitment</a>
+                    <a href="#section2" class="toc-item">2. Definition</a>
+                    <a href="#section3" class="toc-item">3. Core Principles</a>
+                    <a href="#section4" class="toc-item">4. Protective Measures</a>
+                    <a href="#section5" class="toc-item">5. Prohibited Conduct</a>
+                    <a href="#section6" class="toc-item">6. Parental Rights</a>
+                    <a href="#section7" class="toc-item">7. Education</a>
+                    <a href="#section8" class="toc-item">8. Contact</a>
+                </div>
+            </div>
+
+            <!-- Policy Content -->
+            <div class="col-lg-9">
+                <!-- Section 1 -->
+                <div class="section-card" id="section1">
+                    <div class="section-number">1</div>
+                    <h2 class="section-title" style="position: relative; z-index: 2;">Our Commitment to Child Safety</h2>
+                    <p style="position: relative; z-index: 2;">At ShuleGram, the safety, privacy, and well-being of Children ("Learners") are the foundation of our platform. This policy outlines the specific, non-negotiable measures we take to protect every child using our services.</p>
+                    <div class="alert alert-info border-0" style="background: rgba(155, 127, 214, 0.1); color: var(--text-light); border-left: 4px solid var(--primary-color); position: relative; z-index: 2;">
+                        <i class="fas fa-info-circle me-2" style="color: var(--primary-color);"></i>
+                        <strong>Safety by Design:</strong> Every feature is built with a child's protection as the primary requirement.
+                    </div>
+                    <p class="text-muted mb-0" style="position: relative; z-index: 2;"><small>This policy supplements our main Data Protection Policy and should be read in conjunction with it.</small></p>
+                </div>
+
+                <!-- Section 2 -->
+                <div class="section-card" id="section2">
+                    <div class="section-number">2</div>
+                    <h2 class="section-title">Definition of a Child</h2>
+                    <p>For the purpose of this policy, a <strong>"Child"</strong> or <strong>"Learner"</strong> is any person under the age of 18 whose data is processed on the ShuleGram platform.</p>
+                </div>
+
+                <!-- Section 3 -->
+                <div class="section-card" id="section3">
+                    <div class="section-number">3</div>
+                    <h2 class="section-title">Core Principles</h2>
+                    <div class="principle-item">
+                        <strong>The Child's Best Interests are Paramount:</strong> All decisions regarding feature design and data handling are made with the child's best interests as the primary consideration.
+                    </div>
+                    <div class="principle-item">
+                        <strong>Verifiable Parental Consent is Mandatory:</strong> No Child's profile is created or data processed without explicit, verifiable consent from a Parent or Legal Guardian.
+                    </div>
+                    <div class="principle-item">
+                        <strong>Minimal Data Collection:</strong> We only collect and use the minimum amount of data necessary for the app's educational purpose.
+                    </div>
+                    <div class="principle-item">
+                        <strong>Transparency and Control:</strong> Parents have full visibility and control over their child's data and digital footprint on the platform.
+                    </div>
+                    <div class="principle-item">
+                        <strong>Zero Tolerance for Harm:</strong> We have zero tolerance for any form of bullying, harassment, exploitation, or harmful content.
+                    </div>
+                </div>
+
+                <!-- Section 4 -->
+                <div class="section-card" id="section4">
+                    <div class="section-number">4</div>
+                    <h2 class="section-title">Key Protective Measures</h2>
+                    
+                    <div class="measure-category">
+                        <h5 style="position: relative; z-index: 2;"><i class="fas fa-user-check me-2"></i>Account Creation and Verification</h5>
+                        <ul class="list-unstyled" style="position: relative; z-index: 2;">
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>A Child cannot create their own account</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Accounts for Learners are created by verified Teachers or Parents</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Mandatory parental consent before profile activation</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Teacher accounts verified against school records and TSC database</li>
+                        </ul>
+                    </div>
+
+                    <div class="measure-category">
+                        <h5><i class="fas fa-lock me-2"></i>Strictly Controlled Visibility and Interaction</h5>
+                        <div class="feature-badge"><i class="fas fa-shield-alt"></i> Walled Garden</div>
+                        <div class="feature-badge"><i class="fas fa-ban"></i> No Private Messaging</div>
+                        <div class="feature-badge"><i class="fas fa-eye"></i> Moderated Interactions</div>
+                        <p class="mt-3 mb-2">A Child's profile, photos, videos, and showcased work are never publicly visible. Access is restricted to:</p>
+                        <ul>
+                            <li>The Child's verified Parent(s)/Guardian(s)</li>
+                            <li>Authorized Teachers and staff at the Child's school</li>
+                        </ul>
+                        <p class="text-muted"><small>All communication happens in the open, moderated feed connected to a post.</small></p>
+                    </div>
+
+                    <div class="measure-category">
+                        <h5><i class="fas fa-photo-video me-2"></i>Advanced Media Safeguards</h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center">
+                                    <div class="feature-badge w-100"><i class="fas fa-user-secret"></i> Facial Blurring</div>
+                                    <p class="small text-muted mt-2">Automatic blurring in group photos for children without consent</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center">
+                                    <div class="feature-badge w-100"><i class="fas fa-eye-slash"></i> View-Once Mode</div>
+                                    <p class="small text-muted mt-2">Sensitive content viewable only once per recipient</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center">
+                                    <div class="feature-badge w-100"><i class="fas fa-fingerprint"></i> Watermarking</div>
+                                    <p class="small text-muted mt-2">All media imperceptibly watermarked with user ID</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="measure-category">
+                        <h5><i class="fas fa-brain me-2"></i>AI and Analytics with Guardrails</h5>
+                        <ul>
+                            <li>Purpose-limited AI strictly for educational support</li>
+                            <li>Behavioral analytics for positive feedback only</li>
+                            <li>No automated decision-making without human review</li>
+                            <li>Never used for profiling or targeted advertising</li>
+                        </ul>
+                    </div>
+
+                    <div class="measure-category">
+                        <h5><i class="fas fa-shopping-bag me-2"></i>Safe Marketplace (Parents Only)</h5>
+                        <ul>
+                            <li>Services marketplace is a parent-only feature</li>
+                            <li>Learners cannot see, access, or interact with the marketplace</li>
+                            <li>All service providers vetted (identity and qualifications verified)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Section 5 -->
+                <div class="section-card" id="section5">
+                    <div class="section-number">5</div>
+                    <h2 class="section-title">Prohibited Conduct and Reporting</h2>
+                    <h5 class="text-danger mb-3"><i class="fas fa-exclamation-triangle me-2"></i>Strictly Prohibited:</h5>
+                    <div class="prohibited-item">
+                        <i class="fas fa-times-circle me-2"></i>Sharing abusive, bullying, sexually suggestive, or harmful content
+                    </div>
+                    <div class="prohibited-item">
+                        <i class="fas fa-times-circle me-2"></i>Using the platform to harass or groom a Child
+                    </div>
+                    <div class="prohibited-item">
+                        <i class="fas fa-times-circle me-2"></i>Attempting to contact a Child outside moderated channels
+                    </div>
+                    <div class="prohibited-item">
+                        <i class="fas fa-times-circle me-2"></i>Downloading and redistributing a Child's image without permission
+                    </div>
+                    <div class="alert alert-warning border-0 mt-4" style="background: rgba(255, 193, 7, 0.1); color: var(--text-light); border-left: 4px solid #ffc107;">
+                        <h6><i class="fas fa-flag me-2" style="color: #ffc107;"></i>Report a Concern</h6>
+                        <p class="mb-0">We provide a simple, prominent "Report a Concern" button within the app. All reports are reviewed by our dedicated human moderation team within 24 hours.</p>
+                    </div>
+                </div>
+
+                <!-- Section 6 -->
+                <div class="section-card" id="section6">
+                    <div class="section-number">6</div>
+                    <h2 class="section-title">Parental Rights and Controls</h2>
+                    <p class="mb-4">As a Parent, you have the right to:</p>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="principle-item">
+                                <i class="fas fa-check me-2"></i>Give, refuse, or withdraw consent at any time
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="principle-item">
+                                <i class="fas fa-check me-2"></i>Review all data we hold about your Child
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="principle-item">
+                                <i class="fas fa-check me-2"></i>Request correction or deletion of data
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="principle-item">
+                                <i class="fas fa-check me-2"></i>Control Learner Profile settings (10+ years)
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="principle-item">
+                                <i class="fas fa-check me-2"></i>Be notified of any breach or incident involving your Child's data
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 7 -->
+                <div class="section-card" id="section7">
+                    <div class="section-number">7</div>
+                    <h2 class="section-title">Our Commitment to Education</h2>
+                    <p>We are committed to educating our community:</p>
+                    <div class="row mt-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="measure-category">
+                                <h6><i class="fas fa-users me-2"></i>Resources for Parents</h6>
+                                <p class="mb-0 small">Guides on digital safety and how to talk to children about online privacy</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="measure-category">
+                                <h6><i class="fas fa-chalkboard-teacher me-2"></i>Training for Teachers</h6>
+                                <p class="mb-0 small">Guidelines on responsible sharing and recognizing signs of digital distress</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 8 -->
+                <div class="section-card" id="section8">
+                    <div class="section-number">8</div>
+                    <h2 class="section-title">Contact for Child Safety Concerns</h2>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="contact-card">
+                                <div class="contact-icon">
+                                    <i class="fas fa-shield-alt fa-2x text-white"></i>
+                                </div>
+                                <h5 class="fw-bold">Child Safety Officer</h5>
+                                <p class="text-muted">For urgent safety concerns</p>
+                                <a href="mailto:childsafety@shulegram.co.ke" class="btn btn-primary-custom">
+                                    <i class="fas fa-envelope me-2"></i>childsafety@shulegram.co.ke
+                                </a>
+                                <p class="small text-muted mt-3 mb-0">This channel is monitored closely for urgent response</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="contact-card">
+                                <div class="contact-icon">
+                                    <i class="fas fa-user-shield fa-2x text-white"></i>
+                                </div>
+                                <h5 class="fw-bold">Data Protection Officer</h5>
+                                <p class="text-muted">For privacy inquiries</p>
+                                <a href="mailto:dpo@shulegram.co.ke" class="btn btn-primary-custom">
+                                    <i class="fas fa-envelope me-2"></i>dpo@shulegram.co.ke
+                                </a>
+                                <p class="small text-muted mt-3 mb-0">For all other data privacy inquiries</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <h5 class="fw-bold">ShuleGram</h5>
+                    <p class="text-muted">Protecting children through technology and trust.</p>
+                </div>
+                <div class="col-md-6 text-md-end mb-3">
+                    <p class="text-muted mb-0">© 2025 ShuleGram. All rights reserved.</p>
+                    <p class="text-muted small">Last updated: November 11, 2025</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <div class="scroll-top" id="scrollTop">
+        <i class="fas fa-arrow-up text-white"></i>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Smooth scrolling for TOC links
+        document.querySelectorAll('.toc-item').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                const offset = 80;
+                const targetPosition = target.offsetTop - offset;
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Scroll to top button
+        const scrollTopBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Highlight active TOC item on scroll
+        const sections = document.querySelectorAll('.section-card');
+        const tocItems = document.querySelectorAll('.toc-item');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 100)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocItems.forEach(item => {
+                item.style.background = '';
+                item.style.color = '';
+                if (item.getAttribute('href') === `#${current}`) {
+                    item.style.background = 'rgba(155, 127, 214, 0.15)';
+                    item.style.color = '#2c3e50';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
