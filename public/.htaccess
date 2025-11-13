@@ -1,21 +1,27 @@
 # Enable the rewrite engine
 RewriteEngine On
 
-# Set the base directory (adjust if your site is in a subdirectory)
-# RewriteBase /
+# Set the base directory for cPanel
+RewriteBase /
 
 # Remove .html extension from URLs
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}\.html -f
-RewriteRule ^([^\.]+)$ $1.html [NC,L]
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html [L]
+
+# Handle client-side routing for SPA
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(?!\.(?:js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$)[^/]*$ /index.html [L]
 
 # Remove trailing slashes
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)/$ /$1 [L,R=301]
 
-# Force HTTPS (uncomment if using SSL)
-# RewriteCond %{HTTPS} off
-# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# Force HTTPS (recommended for production)
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # Security Headers
 <IfModule mod_headers.c>
@@ -89,8 +95,11 @@ ErrorDocument 500 /error-500.html
 # Set default charset
 AddDefaultCharset UTF-8
 
-# Set timezone (replace with your timezone)
+# Set timezone for cPanel
 SetEnv TZ Africa/Nairobi
+
+# Set the default document
+DirectoryIndex index.html
 
 # Disable server signature
 ServerSignature Off
