@@ -38,7 +38,8 @@ const cspConfig = {
       "'self'",
       "data:",
       "https://images.unsplash.com",
-      "https://*.unsplash.com"
+      "https://*.unsplash.com",
+      "https://res.cloudinary.com"
     ],
     fontSrc: [
       "'self'",
