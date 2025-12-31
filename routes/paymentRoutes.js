@@ -11,7 +11,8 @@ const {
   retryMpesaPayment,
   cancelPayment,
   getTransactionHistory,
-  validateMpesaNumber
+  validateMpesaNumber,
+  getNegotiationStatus
 } = require('../controllers/paymentController');
 
 // Payment routes
@@ -26,5 +27,6 @@ router.post('/retry/:reference', retryMpesaPayment);
 router.post('/cancel/:reference', cancelPayment);
 router.get('/history/:userId', getTransactionHistory);
 router.post('/validate-phone', validateMpesaNumber);
+router.get('/negotiation-status/:bookingId', getNegotiationStatus);
 
 module.exports = router;

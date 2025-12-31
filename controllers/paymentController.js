@@ -1,4 +1,4 @@
-const { paystackApi } = require('../config/paystack');
+const { paystackApi, PAYSTACK_WEBHOOK_SECRET } = require('../config/paystack');
 const { getDatabase } = require('../config/firebase');
 const { v4: uuidv4 } = require('uuid');
 const logger = require('../utils/logger');
@@ -157,12 +157,45 @@ const verifyPayment = async (req, res) => {
         const paymentType = paymentData.metadata.payment_type || 'booking';
 
         if (paymentType === 'booking_fee') {
+          // Get current booking data
+          const bookingSnapshot = await db.ref(`tuition-bookings/${bookingId}`).once('value');
+          const currentBooking = bookingSnapshot.val() || {};
+          
+          // Update with negotiation unlock
           await db.ref(`tuition-bookings/${bookingId}`).update({
+            ...currentBooking,
             bookingFeePaid: true,
             bookingFeeReference: reference,
             bookingFeePaidAt: Date.now(),
-            status: 'negotiating'
+            status: 'negotiating',
+            negotiationUnlocked: true,
+            negotiationUnlockedAt: new Date().toISOString(),
+            negotiation: {
+              status: 'ready',
+              unlockedBy: paymentData.metadata.userId || paymentData.customer.email,
+              unlockedAt: new Date().toISOString(),
+              messages: [],
+              offers: [],
+              lastActivity: new Date().toISOString()
+            }
           });
+          
+          // Log the unlock event
+          await db.ref(`tuition-bookings/${bookingId}/activityLog`).push().set({
+            action: 'negotiation_unlocked',
+            timestamp: new Date().toISOString(),
+            paymentReference: reference,
+            amount: paymentData.amount / 100,
+            triggeredBy: 'payment_verification',
+            details: {
+              previousStatus: currentBooking.status || 'pending',
+              newStatus: 'negotiating',
+              paymentGateway: 'paystack'
+            }
+          });
+          
+          console.log(`✅ Negotiation unlocked via verification for booking ${bookingId}`);
+          
         } else if (paymentType === 'escrow') {
           await db.ref(`tuition-bookings/${bookingId}`).update({
             escrowPaid: true,
@@ -533,7 +566,7 @@ const processMpesaPaymentDirect = async (req, res) => {
  */
 const verifyWebhookSignature = (req) => {
   try {
-    if (!process.env.PAYSTACK_WEBHOOK_SECRET) {
+    if (!PAYSTACK_WEBHOOK_SECRET) {
       logger.webhook.signatureError('PAYSTACK_WEBHOOK_SECRET is not set');
       return false;
     }
@@ -547,7 +580,7 @@ const verifyWebhookSignature = (req) => {
     }
 
     const hash = crypto
-      .createHmac('sha512', process.env.PAYSTACK_WEBHOOK_SECRET)
+      .createHmac('sha512', PAYSTACK_WEBHOOK_SECRET)
       .update(JSON.stringify(req.body))
       .digest('hex');
 
@@ -645,15 +678,51 @@ const handleWebhook = async (req, res) => {
         // Update booking if bookingId exists
         if (bookingId) {
           const bookingRef = db.ref(`bookings/${bookingId}`);
+          
+          // Get current booking data to preserve existing fields
+          const bookingSnapshot = await bookingRef.once('value');
+          const currentBooking = bookingSnapshot.val() || {};
+          
           const bookingUpdate = {
+            ...currentBooking,
             lastUpdated: new Date().toISOString(),
             status: metadata.payment_type === 'booking_fee' ? 'negotiating' : 'confirmed'
           };
 
           if (metadata.payment_type === 'booking_fee') {
+            // Unlock negotiation features
             bookingUpdate.bookingFeePaid = true;
             bookingUpdate.bookingFeeReference = reference;
             bookingUpdate.bookingFeePaidAt = new Date().toISOString();
+            bookingUpdate.negotiationUnlocked = true;
+            bookingUpdate.negotiationUnlockedAt = new Date().toISOString();
+            
+            // Initialize negotiation structure
+            bookingUpdate.negotiation = {
+              status: 'ready', // ready for negotiation to start
+              unlockedBy: metadata.userId || transaction.email,
+              unlockedAt: new Date().toISOString(),
+              messages: [],
+              offers: [],
+              lastActivity: new Date().toISOString()
+            };
+            
+            // Log negotiation unlock event
+            await db.ref(`bookings/${bookingId}/activityLog`).push().set({
+              action: 'negotiation_unlocked',
+              timestamp: new Date().toISOString(),
+              paymentReference: reference,
+              amount: amount / 100,
+              triggeredBy: 'payment_success',
+              details: {
+                previousStatus: currentBooking.status || 'pending',
+                newStatus: 'negotiating',
+                negotiationFeatures: ['messaging', 'offers', 'counter_offers']
+              }
+            });
+            
+            console.log(`✅ Negotiation unlocked for booking ${bookingId}`);
+            
           } else if (metadata.payment_type === 'escrow') {
             bookingUpdate.escrowPaid = true;
             bookingUpdate.escrowAmount = amount / 100;
@@ -664,6 +733,17 @@ const handleWebhook = async (req, res) => {
 
           await bookingRef.update(bookingUpdate);
           console.log(`Booking ${bookingId} updated for ${metadata.payment_type} payment`);
+          
+          // Also update in tuition-bookings if that's the structure being used
+          if (metadata.payment_type === 'booking_fee') {
+            const tuitionBookingRef = db.ref(`tuition-bookings/${bookingId}`);
+            await tuitionBookingRef.update({
+              ...bookingUpdate,
+              negotiationUnlocked: true,
+              negotiationUnlockedAt: new Date().toISOString()
+            });
+            console.log(`Tuition booking ${bookingId} also updated`);
+          }
         }
         break;
 
@@ -1062,6 +1142,68 @@ const getTransactionHistory = async (req, res) => {
 };
 
 /**
+ * Check if negotiation is unlocked for a booking
+ * GET /api/payments/negotiation-status/:bookingId
+ */
+const getNegotiationStatus = async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+
+    if (!bookingId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Booking ID is required'
+      });
+    }
+
+    const db = getDatabase();
+    
+    // Check both possible locations
+    const [bookingSnapshot, tuitionBookingSnapshot] = await Promise.all([
+      db.ref(`bookings/${bookingId}`).once('value'),
+      db.ref(`tuition-bookings/${bookingId}`).once('value')
+    ]);
+
+    const booking = bookingSnapshot.val();
+    const tuitionBooking = tuitionBookingSnapshot.val();
+    
+    // Use whichever exists
+    const bookingData = booking || tuitionBooking;
+
+    if (!bookingData) {
+      return res.status(404).json({
+        success: false,
+        message: 'Booking not found'
+      });
+    }
+
+    const isNegotiationUnlocked = bookingData.negotiationUnlocked || false;
+    const negotiationData = bookingData.negotiation || null;
+    const bookingFeePaid = bookingData.bookingFeePaid || false;
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        bookingId,
+        status: bookingData.status,
+        negotiationUnlocked: isNegotiationUnlocked,
+        bookingFeePaid: bookingFeePaid,
+        negotiation: negotiationData,
+        unlockedAt: bookingData.negotiationUnlockedAt || null,
+        lastUpdated: bookingData.lastUpdated || null
+      }
+    });
+  } catch (error) {
+    console.error('Get negotiation status error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+};
+
+/**
  * Validate M-Pesa phone number
  * POST /api/payments/validate-phone
  */
@@ -1150,5 +1292,6 @@ module.exports = {
   retryMpesaPayment,
   cancelPayment,
   getTransactionHistory,
-  validateMpesaNumber
+  validateMpesaNumber,
+  getNegotiationStatus
 };

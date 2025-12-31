@@ -1,8 +1,30 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
+// Environment-specific Paystack configuration
+const isProduction = process.env.NODE_ENV === 'production';
+
+// Use test keys in development, production keys in production
+const PAYSTACK_SECRET_KEY = isProduction 
+  ? process.env.PAYSTACK_SECRET_KEY 
+  : process.env.PAYSTACK_TEST_SECRET_KEY;
+
+const PAYSTACK_WEBHOOK_SECRET = isProduction
+  ? process.env.PAYSTACK_WEBHOOK_SECRET
+  : process.env.PAYSTACK_TEST_WEBHOOK_SECRET;
+
 const PAYSTACK_BASE_URL = 'https://api.paystack.co';
+
+// Validate credentials are set
+if (!PAYSTACK_SECRET_KEY) {
+  const keyType = isProduction ? 'PAYSTACK_SECRET_KEY' : 'PAYSTACK_TEST_SECRET_KEY';
+  throw new Error(`Missing ${keyType} in environment variables`);
+}
+
+if (!PAYSTACK_WEBHOOK_SECRET) {
+  const secretType = isProduction ? 'PAYSTACK_WEBHOOK_SECRET' : 'PAYSTACK_TEST_WEBHOOK_SECRET';
+  console.warn(`Warning: ${secretType} not set - webhooks will not work properly`);
+}
 
 // Create axios instance with Paystack config
 const paystackApi = axios.create({
@@ -55,5 +77,7 @@ paystackApi.interceptors.response.use(
 
 module.exports = {
   paystackApi,
-  PAYSTACK_SECRET_KEY
+  PAYSTACK_SECRET_KEY,
+  PAYSTACK_WEBHOOK_SECRET,
+  isProduction
 };
