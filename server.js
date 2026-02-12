@@ -61,10 +61,9 @@ const cspConfig = {
 app.use(helmet({
   contentSecurityPolicy: cspConfig
 }));
-app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
-  credentials: true
-}));
+// Enhanced CORS configuration for Postman and development
+const { getCorsConfig } = require('./middleware/cors-dev');
+app.use(getCorsConfig());
 app.use(express.json()); // Parse JSON bodies
 app.use(apiLogger); // Comprehensive API logging
 app.use(morgan('dev'));

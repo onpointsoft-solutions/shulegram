@@ -163,27 +163,51 @@ const ipWhitelist = (allowedIPs) => {
  * CORS configuration for production
  */
 const corsConfig = {
-  origin: process.env.FRONTEND_URL ? 
-    (origin, callback) => {
-      // Allow exact match or subdomains
-      const allowedOrigins = [
-        process.env.FRONTEND_URL,
-        'https://shulegram.co.ke',
-        'https://www.shulegram.co.ke',
-        'https://backend.shulegram.co.ke'
-      ];
-      
-      if (allowedOrigins.includes(origin) || origin.endsWith('.shulegram.co.ke')) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, Postman, curl)
+    if (!origin) return callback(null, true);
+    
+    // Allow exact match or subdomains
+    const allowedOrigins = [
+      process.env.FRONTEND_URL || 'https://shulegram.co.ke',
+      'https://shulegram.co.ke',
+      'https://www.shulegram.co.ke',
+      'https://backend.shulegram.co.ke',
+      // Development origins
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:3005',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:3001',
+      'http://127.0.0.1:3005',
+      // Postman and testing tools
+      'chrome-extension://*',
+      'moz-extension://*'
+    ];
+    
+    // Check if origin is allowed or matches pattern
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (allowed.includes('*')) {
+        // Handle wildcard patterns
+        const pattern = allowed.replace('*', '.*');
+        return new RegExp(pattern).test(origin);
       }
-    } : false,
+      return allowed === origin || origin.endsWith('.shulegram.co.ke');
+    });
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key'],
-  exposedHeaders: ['x-request-id'],
-  maxAge: 86400 // 24 hours
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key', 'X-Requested-With'],
+  exposedHeaders: ['x-request-id', 'x-total-count'],
+  maxAge: 86400, // 24 hours
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 };
 
 module.exports = {
