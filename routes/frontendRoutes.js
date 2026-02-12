@@ -35,8 +35,13 @@ Object.entries(staticPages).forEach(([route, file]) => {
   }
 });
 
-// Fallback to serve index.html for SPA routing
-router.get('*', (req, res) => {
+// Fallback to serve index.html for SPA routing (exclude API routes)
+router.get('*', (req, res, next) => {
+  // Don't intercept API routes
+  if (req.path.startsWith('/api') || req.path.startsWith('/health')) {
+    return next();
+  }
+  
   const indexPath = path.join(publicPath, 'index.html');
   console.log('SPA fallback serving index from:', indexPath);
   res.sendFile(indexPath);

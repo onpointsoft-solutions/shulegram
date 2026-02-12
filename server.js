@@ -98,6 +98,16 @@ app.use(express.static(frontendPath));
 // API Routes
 app.use('/api/payments', authenticateApiKey, paymentRoutes);
 
+// 404 handler for API routes
+app.use('/api/*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'API endpoint not found',
+    path: req.originalUrl,
+    method: req.method
+  });
+});
+
 // Frontend Routes (must be after API routes)
 app.use('/', frontendRoutes);
 
